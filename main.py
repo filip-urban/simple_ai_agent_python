@@ -15,6 +15,9 @@ def main():
     load_dotenv()
     api_key = os.environ.get("GEMINI_API_KEY")
     client = genai.Client(api_key=api_key)
+    if len(sys.argv) < 2:
+        print(f"No prompt provided as an argument.")
+        sys.exit(0)
     prompt = sys.argv[1]
     system_prompt = """
 You are a helpful AI coding agent.
