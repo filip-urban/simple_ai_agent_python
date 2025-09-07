@@ -49,11 +49,25 @@ All paths you provide should be relative to the working directory. You do not ne
         contents=messages,
         config=config,
     )
+
+    for message in response.candidates:
+        messages.append(message.content)
+
     if response.function_calls:
         for function_call in response.function_calls:
             print(f"Calling function: {function_call.name}({function_call.args})")
             function_call_result = call_function(function_call)
-            print(f"-> {function_call_result.parts[0].function_response.response}")
+            function_call_result_message = function_call_result.parts[
+                0
+            ].function_response.response
+            print(f"-> {function_call_result_message}")
+            result_message = types.Content(
+                role="user",
+                parts=[
+                    types.Part(text=function_call_result_message["result"]),
+                ],
+            )
+            messages.append(result_message)
     else:
         print(response.text)
     if len(sys.argv) > 2:
