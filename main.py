@@ -44,12 +44,13 @@ All paths you provide should be relative to the working directory. You do not ne
     config = types.GenerateContentConfig(
         tools=[available_functions], system_instruction=system_prompt
     )
+    # querry the model
     response = client.models.generate_content(
         model=MODEL,
         contents=messages,
         config=config,
     )
-
+    # add models response to the list of messages
     for message in response.candidates:
         messages.append(message.content)
 
@@ -61,6 +62,7 @@ All paths you provide should be relative to the working directory. You do not ne
                 0
             ].function_response.response
             print(f"-> {function_call_result_message}")
+            # create a message with the function call output
             result_message = types.Content(
                 role="user",
                 parts=[
