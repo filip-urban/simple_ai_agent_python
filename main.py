@@ -14,7 +14,6 @@ from functions.write_file import schema_write_file
 def main():
     load_dotenv()
     api_key = os.environ.get("GEMINI_API_KEY")
-
     client = genai.Client(api_key=api_key)
     prompt = sys.argv[1]
     system_prompt = """
@@ -41,7 +40,8 @@ All paths you provide should be relative to the working directory. You do not ne
         ]
     )
     config = types.GenerateContentConfig(
-        tools=[available_functions], system_instruction=system_prompt
+        tools=[available_functions],
+        system_instruction=system_prompt,
     )
     debug = 0
     if len(sys.argv) > 2:
