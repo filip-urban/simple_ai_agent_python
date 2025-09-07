@@ -43,8 +43,11 @@ All paths you provide should be relative to the working directory. You do not ne
     config = types.GenerateContentConfig(
         tools=[available_functions], system_instruction=system_prompt
     )
-
-    start_agent(client, prompt, messages, config)
+    debug = 0
+    if len(sys.argv) > 2:
+        if sys.argv[2] == "--verbose":
+            debug = 1
+    start_agent(client, prompt, messages, config, debug)
 
 
 if __name__ == "__main__":
