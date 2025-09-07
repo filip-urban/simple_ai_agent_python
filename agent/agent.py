@@ -1,5 +1,3 @@
-import sys
-
 from google.genai import types
 
 from config import MODEL, AGENT_ITERATION_LIMIT
@@ -9,16 +7,16 @@ from functions.call_function import call_function
 def start_agent(client, prompt, messages, config, debug):
     n = 0
     while n < AGENT_ITERATION_LIMIT:
-        # querry the model
+        # querry the LLM
         response = client.models.generate_content(
             model=MODEL,
             contents=messages,
             config=config,
         )
-        # add models response to the list of messages
+        # add LLM's response to the list of messages
         for message in response.candidates:
             messages.append(message.content)
-
+        # iterate over the function calls that the LLM wants to perform
         if response.function_calls:
             for function_call in response.function_calls:
                 print(f"Calling function: {function_call.name}({function_call.args})")
@@ -37,6 +35,7 @@ def start_agent(client, prompt, messages, config, debug):
                 )
                 messages.append(result_message)
         elif response.text:
+            # LLM's final response after it's done its job by calling functions
             print(response.text)
             break
         if debug:
